@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         cameraFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createCalendarEventFromPicture(REQUEST_TAKE_PHOTO);
+                dispatchImageIntent(REQUEST_TAKE_PHOTO);
             }
         });
 
@@ -58,35 +58,20 @@ public class MainActivity extends AppCompatActivity {
         galleryFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createCalendarEventFromPicture(REQUEST_EXISTING_PHOTO);
+                dispatchImageIntent(REQUEST_EXISTING_PHOTO);
             }
         });
 
     }
 
     /**
-     * Starts the app's main process to convert a picture to a calendar event.
-     *
-     * @param sourceRequest - Either REQUEST_TAKE_PHOTO or REQUEST_EXISTING_PHOTO
+     * Launches an ImageConfirmationActivity
      */
-    private void createCalendarEventFromPicture(int sourceRequest) {
-        Log.v("User", "createCalendarEvent..()");
-
-        //Reset URI
-        currentPhotoUri = null;
-
-        //Dispatch an intent to retrieve an image
-        dispatchImageIntent(sourceRequest);
-
-        //Check ensures processing does not begin if no photo was selected
-        if (currentPhotoUri != null) {
-            //Launch activity to parse and edit calendar event
-            launchEditCalendarEventActivity();
-        }
-
-    }
-
-    private void launchEditCalendarEventActivity() {
+    private void launchImageConfirmationActivity() {
+        Log.v("User", "ImageConfirmationActivity Intent started");
+        Intent launchActivityIntent = new Intent(this,
+                ImageConfirmationActivity.class);
+        startActivity(launchActivityIntent);
     }
 
     /**
@@ -118,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(imageSourceIntent, REQUEST_TAKE_PHOTO);
             }
         } else {
-            imageSourceIntent = new Intent(Intent.ACTION_PICK);
-            //MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            imageSourceIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(imageSourceIntent, REQUEST_EXISTING_PHOTO);
         }
     }
@@ -158,9 +142,11 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_TAKE_PHOTO) {
                 Log.v("User", "REQUEST_TAKE_PHOTO Intent returned");
-            } else { //REQUEST_EXISTING_PHOTO
+                launchImageConfirmationActivity();
+            } else if (requestCode == REQUEST_EXISTING_PHOTO) { //REQUEST_EXISTING_PHOTO
                 Log.v("User", "REQUEST_EXISTING_PHOTO Intent returned");
                 currentPhotoUri = data.getData();
+                launchImageConfirmationActivity();
             }
         } else {
             Log.e("Exception", "Intent resultCode returned non-OK");

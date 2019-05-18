@@ -5,4 +5,5 @@
     <string name="image_dialog_message">Take a photo?</string>
     <string name="image_dialog_positive_text">Yes</string>
     <string name="image_dialog_negative_text">Existing Image</string>
+    <string name="image_confirmation_activity_label">Confirm Image</string>
 </resources>
