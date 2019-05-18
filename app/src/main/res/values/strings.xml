@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">CalCam</string>
     <string name="action_settings">Settings</string>
+    <string name="image_dialog_title">Image Source</string>
+    <string name="image_dialog_message">Take a photo?</string>
+    <string name="image_dialog_positive_text">Yes</string>
+    <string name="image_dialog_negative_text">Existing Image</string>
 </resources>
