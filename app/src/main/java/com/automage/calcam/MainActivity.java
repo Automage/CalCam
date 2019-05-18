@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +27,13 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_CHOOSE_EXISTING_PHOTO = 0;
+    static final int REQUEST_EXISTING_PHOTO = 0;
 
-    private boolean chooseImageFromCamera;
     private String currentPhotoPath;
 
     private AlertDialog.Builder imageSourceDialogBuilder;
 
+    private ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,46 +43,45 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mImageView = findViewById(R.id.imageView2);
+
+        FloatingActionButton cameraFab = findViewById(R.id.camera_fab);
+        cameraFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                dispatchImageIntent();
+                createCalendarEventFromPicture(REQUEST_TAKE_PHOTO);
             }
         });
 
-        //Building dialog to pick from camera or gallery
-
-        imageSourceDialogBuilder = new AlertDialog.Builder(this);
-        imageSourceDialogBuilder.setTitle(R.string.image_dialog_title);
-        imageSourceDialogBuilder.setMessage(R.string.image_dialog_message);
-        imageSourceDialogBuilder.setPositiveButton(R.string.image_dialog_positive_text,
-                new DialogInterface.OnClickListener() {
+        FloatingActionButton galleryFab = findViewById(R.id.gallery_fab);
+        galleryFab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                chooseImageFromCamera = true;
-            }
-        });
-        imageSourceDialogBuilder.setNegativeButton(R.string.image_dialog_negative_text,
-                new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                chooseImageFromCamera = false;
+            public void onClick(View view) {
+                createCalendarEventFromPicture(REQUEST_EXISTING_PHOTO);
             }
         });
 
     }
 
-    public void dispatchImageIntent() {
+    /**
+     * Starts the app's main process to convert a picture to a calendar event.
+     *
+     * @param sourceRequest - Either REQUEST_TAKE_PHOTO or REQUEST_EXISTING_PHOTO
+     */
+    private void createCalendarEventFromPicture(int sourceRequest) {
+        Log.v("User", "createCalendarEvent..()");
+
+        //Dispatch an intent to retrieve an image
+        dispatchImageIntent(sourceRequest);
+
+    }
+
+    private void dispatchImageIntent(int sourceRequest) {
+        Log.v("User", "dispatchImageIntent()");
         Intent imageSourceIntent;
 
-        //Show dialog to let user choose image source
-        imageSourceDialogBuilder.show();
-
         //Handle image source
-        if (chooseImageFromCamera) {
+        if (sourceRequest == REQUEST_TAKE_PHOTO) {
             imageSourceIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
             File photoFile = null;
@@ -101,6 +102,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates a file object within the private app directory, intended to be used for .jpeg files.
+     *
+     * @return File object for a .jpeg file
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -112,9 +119,23 @@ public class MainActivity extends AppCompatActivity {
                 storageDir      /* directory */
         );
 
+        image.deleteOnExit();
+
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.v("User", "onActivityResult()");
+
+        if (requestCode == REQUEST_TAKE_PHOTO) {
+            mImageView.setImageAlpha(50);
+        }
+
     }
 
     @Override
