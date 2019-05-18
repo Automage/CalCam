@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_EXISTING_PHOTO = 0;
 
     private String currentPhotoPath;
+    private Uri currentPhotoUri;
 
     private AlertDialog.Builder imageSourceDialogBuilder;
 
@@ -71,11 +72,29 @@ public class MainActivity extends AppCompatActivity {
     private void createCalendarEventFromPicture(int sourceRequest) {
         Log.v("User", "createCalendarEvent..()");
 
+        //Reset URI
+        currentPhotoUri = null;
+
         //Dispatch an intent to retrieve an image
         dispatchImageIntent(sourceRequest);
 
+        //Check ensures processing does not begin if no photo was selected
+        if (currentPhotoUri != null) {
+            //Launch activity to parse and edit calendar event
+            launchEditCalendarEventActivity();
+        }
+
     }
 
+    private void launchEditCalendarEventActivity() {
+    }
+
+    /**
+     * Creates an intent to retrieve an image URI through the camera or gallery, depending on
+     * the value of sourceRequest
+     *
+     * @param sourceRequest - Photo source code (e.g. REQUEST_TAKE_PHOTO)
+     */
     private void dispatchImageIntent(int sourceRequest) {
         Log.v("User", "dispatchImageIntent()");
         Intent imageSourceIntent;
@@ -94,11 +113,14 @@ public class MainActivity extends AppCompatActivity {
             if (photoFile != null) {
                 Uri photoUri = FileProvider.getUriForFile(this,
                             "com.example.android.fileprovider", photoFile);
+                currentPhotoUri = photoUri;
                 imageSourceIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(imageSourceIntent, REQUEST_TAKE_PHOTO);
             }
         } else {
-            //TODO: Gallery intent
+            imageSourceIntent = new Intent(Intent.ACTION_PICK);
+            //MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            startActivityForResult(imageSourceIntent, REQUEST_EXISTING_PHOTO);
         }
     }
 
@@ -132,10 +154,17 @@ public class MainActivity extends AppCompatActivity {
 
         Log.v("User", "onActivityResult()");
 
-        if (requestCode == REQUEST_TAKE_PHOTO) {
-            mImageView.setImageAlpha(50);
+        //Check if result was OK
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_TAKE_PHOTO) {
+                Log.v("User", "REQUEST_TAKE_PHOTO Intent returned");
+            } else { //REQUEST_EXISTING_PHOTO
+                Log.v("User", "REQUEST_EXISTING_PHOTO Intent returned");
+                currentPhotoUri = data.getData();
+            }
+        } else {
+            Log.e("Exception", "Intent resultCode returned non-OK");
         }
-
     }
 
     @Override
