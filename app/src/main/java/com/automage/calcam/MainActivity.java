@@ -140,13 +140,18 @@ public class MainActivity extends AppCompatActivity {
 
         //Check if result was OK
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_TAKE_PHOTO) {
-                Log.v("User", "REQUEST_TAKE_PHOTO Intent returned");
-                launchImageConfirmationActivity();
-            } else if (requestCode == REQUEST_EXISTING_PHOTO) { //REQUEST_EXISTING_PHOTO
-                Log.v("User", "REQUEST_EXISTING_PHOTO Intent returned");
-                currentPhotoUri = data.getData();
-                launchImageConfirmationActivity();
+            switch (requestCode) {
+                case REQUEST_TAKE_PHOTO:
+                    Log.v("User", "REQUEST_TAKE_PHOTO Intent returned");
+                    launchImageConfirmationActivity();
+                    break;
+                case REQUEST_EXISTING_PHOTO:
+                    Log.v("User", "REQUEST_EXISTING_PHOTO Intent returned");
+                    currentPhotoUri = data.getData();
+                    launchImageConfirmationActivity();
+                    break;
+                default:
+                    Log.e("Exception", "Unhandled Intent");
             }
         } else {
             Log.e("Exception", "Intent resultCode returned non-OK");
