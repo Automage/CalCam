@@ -24,6 +24,9 @@ out/
 .gradle/
 build/
 
+# Google Services
+google-services.json
+
 # Signing files
 .signing/
 

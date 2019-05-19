@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -43,7 +44,7 @@ public class ImageConfirmationActivity extends AppCompatActivity {
     }
 
     private void readImageFromStorage(Uri location) {
-
+        Log.v("User", location == null ? "null" : location.toString());
     }
 
     private void runTextRecognition() {

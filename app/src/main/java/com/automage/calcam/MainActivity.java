@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v("User", "ImageConfirmationActivity Intent started");
         Intent launchActivityIntent = new Intent(this,
                 ImageConfirmationActivity.class);
+        Log.v("User", currentPhotoUri == null ? "null" : currentPhotoUri.toString());
         launchActivityIntent.putExtra(EXTRA_IMAGE_URI, currentPhotoUri);
         startActivity(launchActivityIntent);
     }
