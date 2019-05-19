@@ -26,15 +26,16 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ImageView mImageView;
+
+    public static final String EXTRA_IMAGE_URI =
+            "com.automage.calcam.extra.IMAGE_URI";
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_EXISTING_PHOTO = 0;
 
     private String currentPhotoPath;
     private Uri currentPhotoUri;
 
-    private AlertDialog.Builder imageSourceDialogBuilder;
-
-    private ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v("User", "ImageConfirmationActivity Intent started");
         Intent launchActivityIntent = new Intent(this,
                 ImageConfirmationActivity.class);
+        launchActivityIntent.putExtra(EXTRA_IMAGE_URI, currentPhotoUri);
         startActivity(launchActivityIntent);
     }
 
