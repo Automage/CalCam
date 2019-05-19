@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_EXISTING_PHOTO = 0;
 
     private String currentPhotoPath;
-    private Uri currentPhotoUri;
+    private Uri currentPhotoUri = null;
 
 
     @Override
@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
      * Launches an ImageConfirmationActivity
      */
     private void launchImageConfirmationActivity() {
-        Log.v("User", "ImageConfirmationActivity Intent started");
+        Log.v("pman", "ImageConfirmationActivity Intent started");
         Intent launchActivityIntent = new Intent(this,
                 ImageConfirmationActivity.class);
-        Log.v("User", currentPhotoUri == null ? "null" : currentPhotoUri.toString());
-        launchActivityIntent.putExtra(EXTRA_IMAGE_URI, currentPhotoUri);
+        //Log.v("pman", currentPhotoUri == null ? "null" : currentPhotoUri.toString());
+        launchActivityIntent.putExtra(EXTRA_IMAGE_URI, currentPhotoUri.toString());
         startActivity(launchActivityIntent);
     }
 
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
      * @param sourceRequest - Photo source code (e.g. REQUEST_TAKE_PHOTO)
      */
     private void dispatchImageIntent(int sourceRequest) {
-        Log.v("User", "dispatchImageIntent()");
+        Log.v("pman", "dispatchImageIntent()");
         Intent imageSourceIntent;
 
         //Handle image source
@@ -139,18 +139,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.v("User", "onActivityResult()");
+        Log.v("pman", "onActivityResult()");
 
         //Check if result was OK
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_TAKE_PHOTO:
-                    Log.v("User", "REQUEST_TAKE_PHOTO Intent returned");
+                    Log.v("pman", "REQUEST_TAKE_PHOTO Intent returned");
                     launchImageConfirmationActivity();
                     break;
                 case REQUEST_EXISTING_PHOTO:
-                    Log.v("User", "REQUEST_EXISTING_PHOTO Intent returned");
+                    Log.v("pman", "REQUEST_EXISTING_PHOTO Intent returned");
                     currentPhotoUri = data.getData();
+                    //currentPhotoPath = photoUri.getPath();
                     launchImageConfirmationActivity();
                     break;
                 default:

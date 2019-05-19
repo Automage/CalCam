@@ -32,8 +32,8 @@ public class ImageConfirmationActivity extends AppCompatActivity {
         displayedPicture = findViewById(R.id.displayed_image);
 
         Intent data = getIntent();
-        Uri imageLocation = data.getData();
-        readImageFromStorage(imageLocation);
+        Uri imageUri = Uri.parse(data.getStringExtra(MainActivity.EXTRA_IMAGE_URI));
+        readImageFromStorage(imageUri);
 
         runTextRecognition();
     }
@@ -43,8 +43,8 @@ public class ImageConfirmationActivity extends AppCompatActivity {
 
     }
 
-    private void readImageFromStorage(Uri location) {
-        Log.v("User", location == null ? "null" : location.toString());
+    private void readImageFromStorage(Uri photoUri) {
+        Log.v("pman", photoUri == null ? "null" : photoUri.toString());
     }
 
     private void runTextRecognition() {
