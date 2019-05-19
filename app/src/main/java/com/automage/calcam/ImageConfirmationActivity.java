@@ -3,6 +3,7 @@ package com.automage.calcam;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,10 +13,14 @@ import android.widget.ImageView;
 
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 
+import java.io.IOException;
+
 public class ImageConfirmationActivity extends AppCompatActivity {
 
     private FloatingActionButton fab;
-    private ImageView displayedPicture;
+    private ImageView displayedImageView;
+
+    private Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +34,7 @@ public class ImageConfirmationActivity extends AppCompatActivity {
                 launchEditEventActivity();
             }
         });
-        displayedPicture = findViewById(R.id.displayed_image);
+        displayedImageView = findViewById(R.id.displayed_image);
 
         Intent data = getIntent();
         Uri imageUri = Uri.parse(data.getStringExtra(MainActivity.EXTRA_IMAGE_URI));
@@ -44,7 +49,12 @@ public class ImageConfirmationActivity extends AppCompatActivity {
     }
 
     private void readImageFromStorage(Uri photoUri) {
-        Log.v("pman", photoUri == null ? "null" : photoUri.toString());
+        try {
+            image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+            displayedImageView.setImageBitmap(image);
+        } catch (IOException e) {
+            Log.e("Exception", e.toString());
+        }
     }
 
     private void runTextRecognition() {
