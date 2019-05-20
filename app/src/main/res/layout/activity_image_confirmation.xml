@@ -18,6 +18,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/btn_star_big_on" />
 
+    <com.automage.calcam.graphics.GraphicOverlay
+        android:id="@+id/text_overlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/displayed_image"
+        app:layout_constraintLeft_toLeftOf="@id/displayed_image"
+        app:layout_constraintRight_toRightOf="@id/displayed_image"
+        app:layout_constraintTop_toTopOf="@id/displayed_image" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/confirmation_fab"
         android:layout_width="wrap_content"
