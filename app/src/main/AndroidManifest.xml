@@ -27,7 +27,8 @@
         </activity>
         <activity
             android:name=".ImageConfirmationActivity"
-            android:label="@string/image_confirmation_activity_label">
+            android:label="@string/image_confirmation_activity_label"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
