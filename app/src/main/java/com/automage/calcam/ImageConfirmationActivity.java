@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automage.calcam.graphics.GraphicOverlay;
@@ -29,7 +30,7 @@ public class ImageConfirmationActivity extends AppCompatActivity {
 
     private FloatingActionButton fab;
     private ImageView displayedImageView;
-    private GraphicOverlay textOverlay;
+    private TextView parsedTextView;
 
     private Bitmap image;
 
@@ -40,7 +41,7 @@ public class ImageConfirmationActivity extends AppCompatActivity {
 
 
         displayedImageView = findViewById(R.id.displayed_image);
-        textOverlay = findViewById(R.id.text_overlay);
+        parsedTextView = findViewById(R.id.parsed_text);
         fab = findViewById(R.id.confirmation_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,19 +98,25 @@ public class ImageConfirmationActivity extends AppCompatActivity {
             showToast("No text recognized!");
             return;
         }
-        textOverlay.clear();
+
+        parsedTextView.setText("");
+        String temp = "";
         List<FirebaseVisionDocumentText.Block> blocks = text.getBlocks();
         for (int i = 0; i < blocks.size(); i++) {
             List<FirebaseVisionDocumentText.Paragraph> paragraphs = blocks.get(i).getParagraphs();
             for (int j = 0; j < paragraphs.size(); j++) {
                 List<FirebaseVisionDocumentText.Word> words = paragraphs.get(j).getWords();
                 for (int l = 0; l < words.size(); l++) {
-                    TextGraphic cloudDocumentTextGraphic = new TextGraphic(textOverlay,
-                            words.get(l));
-                    textOverlay.add(cloudDocumentTextGraphic);
+                    List<FirebaseVisionDocumentText.Symbol> symbols = words.get(l).getSymbols();
+                    for (int k = 0; k < symbols.size(); k++) {
+                        temp += symbols.get(k).getText();
+                    }
+                    temp += " ";
                 }
+                temp += "\n";
             }
         }
+        parsedTextView.setText(temp);
     }
 
     private void showToast(String message) {
