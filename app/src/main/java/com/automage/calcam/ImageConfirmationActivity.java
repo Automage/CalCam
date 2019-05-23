@@ -2,10 +2,12 @@ package com.automage.calcam;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.media.ExifInterface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +27,9 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText;
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class ImageConfirmationActivity extends AppCompatActivity {
@@ -62,13 +66,52 @@ public class ImageConfirmationActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Reads image from the URI provided. Rotates the image if necessary by reading Exif
+     * data
+     *
+     * @param photoUri - URI to image file
+     */
     private void readImageFromStorage(Uri photoUri) {
-        try {
-            image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
-            displayedImageView.setImageBitmap(image);
+        Bitmap temp_bitmap = null;
+        ExifInterface ei = null;
+
+        try (InputStream inputStream = this.getContentResolver().openInputStream(photoUri);) {
+            temp_bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+            ei = new ExifInterface(inputStream);
         } catch (IOException e) {
             Log.e("Exception", e.toString());
         }
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        switch(orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                image = rotateImage(temp_bitmap, 90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                image = rotateImage(temp_bitmap, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                image = rotateImage(temp_bitmap, 270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                image = temp_bitmap;
+        }
+
+        displayedImageView.setImageBitmap(image);
+    }
+
+    private Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
     private void runTextRecognition() {
