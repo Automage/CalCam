@@ -15,7 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".EditCalendarEventActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -29,6 +28,14 @@
         <activity
             android:name=".ImageConfirmationActivity"
             android:label="@string/image_confirmation_activity_label"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".EditCalendarEventActivity"
+            android:label="Edit Calendar Event"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

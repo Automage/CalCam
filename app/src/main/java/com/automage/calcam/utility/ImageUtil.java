@@ -24,7 +24,7 @@ public class ImageUtil {
      * @param photoUri - URI to image file
      */
     public static Bitmap readImageFromStorage(Uri photoUri, ContentResolver contentResolver) {
-        Bitmap image = null;
+        Bitmap image;
         Bitmap temp_bitmap = null;
         ExifInterface ei = null;
 

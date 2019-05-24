@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.automage.calcam.EditCalendarEventActivity">
+    <item
+        android:id="@+id/edit_calendar_event_confirma"
+        android:title="Confirm Event"
+        android:icon="@drawable/ic_tick_icon"
+        app:showAsAction="always"/>
+</menu>
