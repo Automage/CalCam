@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="fab_confirmation_color">#49d14d</color>
+    <color name="colorEditTextActivated">#ec407a</color>
+    <color name="colorEditTextNormal">#26a69a</color>
 </resources>

@@ -75,6 +75,7 @@ public class EditCalendarEventActivity extends AppCompatActivity {
     private void processTextRecognitionResult(FirebaseVisionDocumentText text) {
         Log.v("pman", "processTextRecognitionResult()");
         parsedText = text;
+
         if (text == null) {
             Log.v("pman", "no text recognized");
             showToast("No text recognized!");
@@ -118,7 +119,7 @@ public class EditCalendarEventActivity extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG);
+        Toast.makeText(EditCalendarEventActivity.this, message, Toast.LENGTH_LONG);
     }
 
 }

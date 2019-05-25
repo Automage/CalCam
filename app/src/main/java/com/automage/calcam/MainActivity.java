@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (photoFile != null) {
                 Uri photoUri = FileProvider.getUriForFile(this,
-                            "com.example.android.fileprovider", photoFile);
+                        "com.example.android.fileprovider", photoFile);
                 currentPhotoUri = photoUri;
                 imageSourceIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(imageSourceIntent, REQUEST_TAKE_PHOTO);
